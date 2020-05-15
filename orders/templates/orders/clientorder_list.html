@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Список публикаций</title>
+<style>
+	body {
+		margin:1em auto;
+		max-width:40em;
+		padding:0 .62em;
+		font:1.2em/1.62 sans-serif;
+	}
+	h1,h2 {
+		line-height:1.2;
+	}
+</style>
+<article>
+	<header>
+		<h1>Список всех побликаций</h1>
+		<aside>Чисто для отладки</aside>
+	</header>
+{% for pub in client_orders %}
+	<h2>{{ pub.public_num }}</h2>
+</article>
+{% endfor %}

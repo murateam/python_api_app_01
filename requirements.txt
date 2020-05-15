@@ -1,0 +1,17 @@
+asgiref==3.2.7
+
+Django==3.0.5
+
+django-cors-headers==3.2.1
+
+django-phone-field==1.8.0
+
+djangorestframework==3.11.0
+
+Pillow==7.1.1
+
+pytz==2019.3
+
+six==1.14.0
+
+sqlparse==0.3.1

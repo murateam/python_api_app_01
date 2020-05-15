@@ -50,7 +50,7 @@ def client_order_items(request):
 		get StockItems by CLientOrder ID
 	"""
 	data = JSONParser().parse(request)
-	print(data)
+	# print(data)
 	client_order = ClientOrder.objects.get(id=data['client_order'])
 	stock_items = client_order.stock_items.all()
 

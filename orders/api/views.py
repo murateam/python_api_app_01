@@ -103,3 +103,6 @@ def client_order_add(request):
 		return JsonResponse(serializer.data, status=201)
 
 	return JsonResponse(serializer.errors, status=400)
+	# print(data)
+
+	# return Response(status=status.HTTP_200_OK)

@@ -70,7 +70,7 @@ class ClientOrder(models.Model):
 	payment_status = models.CharField(max_length=25, choices=STATUS_PAYMENT, default='waiting for payment')
 	author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
 	client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='orders')
-	when_published = models.DateTimeField(default=timezone.now)
+	when_published = models.DateTimeField(default=timezone.now, blank=True)
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 	eur_rate = models.FloatField(max_length=10, default=0)

@@ -19,7 +19,7 @@ class Client(models.Model):
 	email = models.EmailField()
 	passport = models.CharField(max_length=129, unique=True)
 	#adress
-	adress = models.CharField(max_length=128)
+	address = models.CharField(max_length=128)
 
 	def __str__(self):
 		return str(self.last_name)+' '+str(self.first_name)[0]+'.'+' '+str(self.middle_name)[0]+'.'

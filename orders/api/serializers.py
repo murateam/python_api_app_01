@@ -20,7 +20,7 @@ class ClientSerializer(serializers.ModelSerializer):
 			"phone",
 			"email",
 			"passport",
-			"adress",
+			"address",
 		]
 
 class ListClientSerializer(serializers.ModelSerializer):

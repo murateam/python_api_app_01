@@ -30,6 +30,6 @@ urlpatterns = [
 	path('factories/items/<int:pk>', SingleFactoryItemView.as_view()),
 
 	path('stock_items/', ListStockItemView.as_view()),
-	path('stock_items/client_order/', item_views.client_order_items),
-	# path('stock_items/client_order/', StockItemView.as_view()),
+	path('stock_items/client_order/', item_views.stock_items_for_client_order),
+	path('stock_items/save_from_client_order/', item_views.save_stock_items_from_client_order),
 ]

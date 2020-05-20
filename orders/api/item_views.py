@@ -45,20 +45,25 @@ class ListStockItemView(ListCreateAPIView):
 
 
 @api_view(['POST'])
-def client_order_items(request):
+def stock_items_for_client_order(request):
 	"""
 		get StockItems by CLientOrder ID
 	"""
 	data = JSONParser().parse(request)
-	# print(data)
 	client_order = ClientOrder.objects.get(id=data['client_order'])
 	stock_items = client_order.stock_items.all()
-
-	# stock_items = StockItem.objects.filter(client_order__pk=data['client_order'])
-	# print(stock_items)
 
 	serializer = ListStockItemSerializer(stock_items, many=True)
 	return Response(serializer.data)
 
-# class StockItemView(ListCreateAPIView):
-# 	serializer_class = ListStockItemSerializer
+@api_view(['POST'])
+def save_stock_items_from_client_order(request):
+	"""
+		save existed and new stock items coming from client order
+	"""
+
+	data = JSONParser().parse(request)
+	# print(data)
+	for i in data:
+		print(i)
+	return Response(status=status.HTTP_200_OK)

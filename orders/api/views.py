@@ -78,7 +78,7 @@ def check_client(request):
 @api_view(['POST'])
 def client_order_add(request):
 	"""
-		first generate uniq a number for the order, then add a client order 
+		first generate a uniq number for the order, then save a client order 
 	"""
 
 	def get_public_number():

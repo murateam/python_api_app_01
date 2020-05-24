@@ -5,6 +5,7 @@ from rest_framework.parsers import JSONParser
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.forms.models import model_to_dict
 
 from orders.models import ClientOrder
 from orders.models import Factory, FactoryCollection, FactoryItem
@@ -73,27 +74,57 @@ def save_stock_items_from_client_order(request):
 		item['factory_item'] = factory_item
 		return item
 
-	def check_for_exist_item_factory(item):
-		# print(item['factory_item'])
+	def check_item_factory(item):
+		
 		catalogue_number = item['factory_item']['catalogue_number']
 		factory_collection = item['factory_item']['factory_collection']['name']
 		factory = item['factory_item']['factory_collection']['factory']['name']
 
-		# factory_item = FactoryItem.objects.filter(catalogue_number=item['factory_item']['catalogue_number']).first()
-		
-		# print(factory_item.factory_collection.factory)
+		found_factory_item = FactoryItem.objects.filter(catalogue_number=item['factory_item']['catalogue_number']).first()
 
-	check_for_exist_item_factory(list_items_to_save[2])
+		if found_factory_item:
+			found_catalogue_number = found_factory_item.catalogue_number
+			found_factory_collection = found_factory_item.factory_collection.name
+			found_factory = found_factory_item.factory_collection.factory.name
+
+			if catalogue_number == found_catalogue_number and factory_collection == found_factory_collection and factory == found_factory:
+				return found_factory_item['id']
+
+			else:
+				return 'incorrect'
+
+		return None
+
+	def delete_exist_item(item):
+		if item['id']:
+			obj = StockItem.objects.filter(id=item['id']).delete()
+			print(obj)
 
 	
-	# for item in list_items_to_save:
-	# 	if item['client_order']['id'] != None: 
-	# 		serializer = StockItemSerializer(data=item)
-	# 		serializer.is_valid()
-	# 		print(serializer.errors)
-		# else:
-		# 	print("don't have ID")
+	for item in list_items_to_save:
+		if item['id'] != None:
+			exist_item = StockItem.objects.get(pk=item['id']) 
+			serializer = StockItemSerializer(exist_item, data=cut_exist_item(item))
+			if serializer.is_valid():
+				serializer.save()
+			else:
+				print(serializer.errors)
+		else:
+			item['client_order'] = client_order_id
+			if check_item_factory(item) == None or 'incorrect':
+				item['incorrect_factory'] = f"{item['factory_item']['factory_collection']['factory']['name']}&{item['factory_item']['factory_collection']['name']}&{item['factory_item']['catalogue_number']}"
+				item['factory_item'] = None
+				serializer = StockItemSerializer(data=item)
+				if serializer.is_valid():
+					serializer.save()
 
-	# print(list_items_to_save[0]['client_order']['id'])
+	for item in list_items_to_delete:
+		delete_exist_item(item)
 
-	return Response(status=status.HTTP_200_OK)
+	client_order = ClientOrder.objects.get(id=client_order_id)
+	stock_items = client_order.stock_items.all()
+
+	serializer = ListStockItemSerializer(stock_items, many=True)
+	return Response(serializer.data)
+
+	# return Response(status=status.HTTP_200_OK)

@@ -102,7 +102,7 @@ def save_stock_items_from_client_order(request):
 
 	
 	for item in list_items_to_save:
-		if item['id'] != None:
+		if item['factory_item']['id'] != None:
 			exist_item = StockItem.objects.get(pk=item['id']) 
 			serializer = StockItemSerializer(exist_item, data=cut_exist_item(item))
 			if serializer.is_valid():

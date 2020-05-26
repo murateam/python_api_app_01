@@ -67,33 +67,64 @@ def save_stock_items_from_client_order(request):
 	list_items_to_save = data[1]['value']
 	list_items_to_delete = data[2]['value']
 
-	def cut_exist_item(item):
-		client_order = item['client_order']['id']
-		factory_item = item['factory_item']['id']
-		item['client_order'] = client_order
-		item['factory_item'] = factory_item
-		return item
+	def check_item(item):
+		"""
+			The function is checking item: exist and correct; exist and incorrect; doesn't exist
+			Return item ready to save
+		"""
 
-	def check_item_factory(item):
-		
-		catalogue_number = item['factory_item']['catalogue_number']
-		factory_collection = item['factory_item']['factory_collection']['name']
-		factory = item['factory_item']['factory_collection']['factory']['name']
+		def cut_exist_item(item):
+			client_order = item['client_order']['id']
+			factory_item = item['factory_item']['id']
+			item['client_order'] = client_order
+			item['factory_item'] = factory_item
+			return item
 
-		found_factory_item = FactoryItem.objects.filter(catalogue_number=item['factory_item']['catalogue_number']).first()
+		if item['id'] != None:
+			print(item)
+			if item['factory_item'] != None:
+				print('item exist and correct')
+				print(item)
 
-		if found_factory_item:
-			found_catalogue_number = found_factory_item.catalogue_number
-			found_factory_collection = found_factory_item.factory_collection.name
-			found_factory = found_factory_item.factory_collection.factory.name
-
-			if catalogue_number == found_catalogue_number and factory_collection == found_factory_collection and factory == found_factory:
-				return found_factory_item['id']
+				# exist_item = StockItem.objects.get(pk=item['id'])
+				# serializer = StockItemSerializer(exist_item, data=cut_exist_item(item))
+				# if serializer.is_valid():
+				# 	serializer.save()
+				# else:
+				# 	print(serializer.errors)
 
 			else:
-				return 'incorrect'
+				print('item exist and incorrect')
+				print(item)
+				# catalogue_number = item['factory_item']['catalogue_number']
+				# factory_collection = item['factory_item']['factory_collection']['name']
+				# factory = item['factory_item']['factory_collection']['factory']['name']
 
-		return None
+				# found_factory_item = FactoryItem.objects.filter(catalogue_number=item['factory_item']['catalogue_number']).first()
+
+				# if found_factory_item:
+				# 	found_catalogue_number = found_factory_item.catalogue_number
+				# 	found_factory_collection = found_factory_item.factory_collection.name
+				# 	found_factory = found_factory_item.factory_collection.factory.name
+
+				# 	if catalogue_number == found_catalogue_number and factory_collection == found_factory_collection and factory == found_factory:
+				# 		return found_factory_item['id']
+
+				# 	else:
+				# 		return 'incorrect'
+
+				# return None
+
+		else:
+			print("item doesn't exist")
+			print(item)
+			# item['client_order'] = client_order_id
+			# if check_item_factory(item) == None or 'incorrect':
+			# 	item['incorrect_factory'] = f"{item['factory_item']['factory_collection']['factory']['name']}&{item['factory_item']['factory_collection']['name']}&{item['factory_item']['catalogue_number']}"
+			# 	item['factory_item'] = None
+			# 	serializer = StockItemSerializer(data=item)
+			# 	if serializer.is_valid():
+			# 		serializer.save()
 
 	def delete_exist_item(item):
 		if item['id']:
@@ -102,21 +133,7 @@ def save_stock_items_from_client_order(request):
 
 	
 	for item in list_items_to_save:
-		if item['factory_item']['id'] != None:
-			exist_item = StockItem.objects.get(pk=item['id']) 
-			serializer = StockItemSerializer(exist_item, data=cut_exist_item(item))
-			if serializer.is_valid():
-				serializer.save()
-			else:
-				print(serializer.errors)
-		else:
-			item['client_order'] = client_order_id
-			if check_item_factory(item) == None or 'incorrect':
-				item['incorrect_factory'] = f"{item['factory_item']['factory_collection']['factory']['name']}&{item['factory_item']['factory_collection']['name']}&{item['factory_item']['catalogue_number']}"
-				item['factory_item'] = None
-				serializer = StockItemSerializer(data=item)
-				if serializer.is_valid():
-					serializer.save()
+		check_item(item)
 
 	for item in list_items_to_delete:
 		delete_exist_item(item)

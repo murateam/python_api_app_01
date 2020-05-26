@@ -16,5 +16,6 @@ admin.site.register(AgreementExtra)
 admin.site.register(AgreementImage)
 admin.site.register(ImportImage)
 admin.site.register(Movement)
+admin.site.register(CurrentRate)
 
 # admin.site.register(ImportItem)

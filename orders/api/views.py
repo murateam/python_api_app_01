@@ -1,6 +1,6 @@
 from rest_framework import generics, viewsets
 from django.contrib.auth.models import User
-from orders.models import Client, ClientOrder
+from orders.models import CurrentRate, Client, ClientOrder
 
 from orders.api.serializers import ClientSerializer, ListClientSerializer
 from orders.api.serializers import ClientOrderSerializer, ListClientOrderSerializer

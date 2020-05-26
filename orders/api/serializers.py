@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from orders.models import Client, ClientOrder
+from orders.models import CurrentRate, Client, ClientOrder
 
 
 class ListAuthorSerializer(serializers.ModelSerializer):

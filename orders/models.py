@@ -3,10 +3,12 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 
-class CurrentPrice(models.Model):
+class CurrentRate(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	current_rate = models.IntegerField()
 
+	def __str__(self):
+		return str(self.current_rate) + ' ' + 'RUB/EUR' + ' ' + str(self.created).split(' ')[0]
 
 
 class Client(models.Model):
@@ -73,7 +75,8 @@ class ClientOrder(models.Model):
 	when_published = models.DateTimeField(default=timezone.now, blank=True)
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
-	eur_rate = models.FloatField(max_length=10, default=0)
+	# eur_rate = models.FloatField(max_length=10, default=0)
+	eur_rate = models.ForeignKey(CurrentRate, on_delete=models.CASCADE, related_name='eur_rate', blank=True, null=True)
 	price = models.FloatField(max_length=20, default=0)
 	total_payment = models.FloatField(max_length=20, default=0)
 	designer = models.CharField(max_length=20, blank=True)

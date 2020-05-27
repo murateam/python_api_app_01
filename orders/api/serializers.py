@@ -2,6 +2,10 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from orders.models import CurrentRate, Client, ClientOrder
 
+class CurrentRateSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CurrentRate
+		fields = ["id", "created", "current_rate"]
 
 class ListAuthorSerializer(serializers.ModelSerializer):
 	class Meta:

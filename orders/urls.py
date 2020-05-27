@@ -1,5 +1,6 @@
 from django.urls import path
 
+from orders.api.views import SavedRateView, CurrentRateView
 from orders.api.views import ListClientView, SingleClientView
 from orders.api.views import ListClientOrderView, SingleClientOrderView, SingleListClientOrderView
 from orders.api.item_views import FactoryView, SingleFactoryView, FactoryCollectionView, SingleFactoryCollectionView
@@ -13,6 +14,10 @@ from orders.api import item_views
 app_name = "orders"
 
 urlpatterns = [
+	path('current_rate/', api_views.current_rate),
+	path('create_current_rate/', CurrentRateView.as_view()),
+	path('saved_rate/<int:pk>', SavedRateView.as_view()),
+
 	path('clients/', ListClientView.as_view()),
 	path('clients/<int:pk>', SingleClientView.as_view()),
 	path('clients/check/', api_views.check_client),

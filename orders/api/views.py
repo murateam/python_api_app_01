@@ -2,6 +2,7 @@ from rest_framework import generics, viewsets
 from django.contrib.auth.models import User
 from orders.models import CurrentRate, Client, ClientOrder
 
+from orders.api.serializers import CurrentRateSerializer
 from orders.api.serializers import ClientSerializer, ListClientSerializer
 from orders.api.serializers import ClientOrderSerializer, ListClientOrderSerializer
 
@@ -11,7 +12,6 @@ from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
-
 
 class ListClientView(ListCreateAPIView):
 	queryset = Client.objects.all()
@@ -35,7 +35,7 @@ class SingleClientOrderView(RetrieveUpdateDestroyAPIView):
 	serializer_class = ClientOrderSerializer
 
 
-''' Пробую получить клиента по фамилии со своим блэкджеком и шлюхами'''
+''' Пробую получить клиента по фамилии со своим блэкджеком и пр'''
 
 import datetime
 from rest_framework import status
@@ -43,7 +43,26 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from django.http import JsonResponse
 from rest_framework.response import Response
-from orders.models import Client
+
+@api_view(['GET'])
+def current_rate(request):
+	"""
+		GET current rate RUB per one EUR
+	"""
+	if request.method == 'GET':
+		current_rate = CurrentRate.objects.all().last()
+		print(current_rate)
+		serializer = CurrentRateSerializer(current_rate)
+		return Response(serializer.data)
+
+class CurrentRateView(generics.ListCreateAPIView):
+	queryset = CurrentRate.objects.all()
+	serializer_class= CurrentRateSerializer
+
+class SavedRateView(RetrieveAPIView):
+	queryset = CurrentRate.objects.all()
+	serializer_class = CurrentRateSerializer
+
 
 @api_view(['POST'])
 def check_client(request):

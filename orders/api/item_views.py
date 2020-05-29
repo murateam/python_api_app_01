@@ -67,64 +67,59 @@ def save_stock_items_from_client_order(request):
 	list_items_to_save = data[1]['value']
 	list_items_to_delete = data[2]['value']
 
-	def check_item(item):
+	def save_item(item):
 		"""
-			The function is checking item: exist and correct; exist and incorrect; doesn't exist
-			Return item ready to save
+			The function is checking is item correct -> save as correct OR save as incorrect
 		"""
 
-		def cut_exist_item(item):
+		def item_is_correct(item):
+			catalogue_number = item['factory_item']['catalogue_number']
+			factory_collection = item['factory_item']['factory_collection']['name']
+			factory = item['factory_item']['factory_collection']['factory']['name']
+
+			found_factory_item = FactoryItem.objects.filter(catalogue_number=item['factory_item']['catalogue_number']).first()
+
+			if found_factory_item:
+				found_catalogue_number = found_factory_item.catalogue_number
+				found_factory_collection = found_factory_item.factory_collection.name
+				found_factory = found_factory_item.factory_collection.factory.name
+
+				if catalogue_number == found_catalogue_number and factory_collection == found_factory_collection and factory == found_factory:
+					return 'correct'
+
+				else:
+					return 'incorrect'
+			else:
+				return 'incorrect'
+
+		def cut_exist_and_correct_item(item):
 			client_order = item['client_order']['id']
 			factory_item = item['factory_item']['id']
 			item['client_order'] = client_order
 			item['factory_item'] = factory_item
 			return item
 
-		if item['id'] != None:
-			print(item)
-			if item['factory_item'] != None:
-				print('item exist and correct')
-				print(item)
-
-				# exist_item = StockItem.objects.get(pk=item['id'])
-				# serializer = StockItemSerializer(exist_item, data=cut_exist_item(item))
-				# if serializer.is_valid():
-				# 	serializer.save()
-				# else:
-				# 	print(serializer.errors)
-
+		def save_correct_item(item):
+			exist_item = StockItem.objects.get(pk=item['id'])
+			serializer = StockItemSerializer(exist_item, data=cut_exist_item(item))
+			if serializer.is_valid():
+				serializer.save()
 			else:
-				print('item exist and incorrect')
-				print(item)
-				# catalogue_number = item['factory_item']['catalogue_number']
-				# factory_collection = item['factory_item']['factory_collection']['name']
-				# factory = item['factory_item']['factory_collection']['factory']['name']
+				print(serializer.errors)
 
-				# found_factory_item = FactoryItem.objects.filter(catalogue_number=item['factory_item']['catalogue_number']).first()
+		def seve_incorrect_item(item):
+			item['client_order'] = client_order_id
+			item['incorrect_factory'] = f"{item['factory_item']['factory_collection']['factory']['name']}&{item['factory_item']['factory_collection']['name']}&{item['factory_item']['catalogue_number']}"
+			item['factory_item'] = None
+			serializer = StockItemSerializer(data=item)
+			if serializer.is_valid():
+				serializer.save()
 
-				# if found_factory_item:
-				# 	found_catalogue_number = found_factory_item.catalogue_number
-				# 	found_factory_collection = found_factory_item.factory_collection.name
-				# 	found_factory = found_factory_item.factory_collection.factory.name
-
-				# 	if catalogue_number == found_catalogue_number and factory_collection == found_factory_collection and factory == found_factory:
-				# 		return found_factory_item['id']
-
-				# 	else:
-				# 		return 'incorrect'
-
-				# return None
-
+		if item_is_correct(item) == 'correct':
+			print('is correct')
 		else:
-			print("item doesn't exist")
-			print(item)
-			# item['client_order'] = client_order_id
-			# if check_item_factory(item) == None or 'incorrect':
-			# 	item['incorrect_factory'] = f"{item['factory_item']['factory_collection']['factory']['name']}&{item['factory_item']['factory_collection']['name']}&{item['factory_item']['catalogue_number']}"
-			# 	item['factory_item'] = None
-			# 	serializer = StockItemSerializer(data=item)
-			# 	if serializer.is_valid():
-			# 		serializer.save()
+			print('isn\'t correct')
+
 
 	def delete_exist_item(item):
 		if item['id']:
@@ -133,7 +128,7 @@ def save_stock_items_from_client_order(request):
 
 	
 	for item in list_items_to_save:
-		check_item(item)
+		save_item(item)
 
 	for item in list_items_to_delete:
 		delete_exist_item(item)

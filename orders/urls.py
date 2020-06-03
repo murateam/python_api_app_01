@@ -9,6 +9,7 @@ from orders.api.item_views import ListStockItemView#, StockItemView
 from orders.api.payment_views import ListPaymentView, SinglePaymentView
 from orders.api import views as api_views
 from orders.api import item_views
+from orders.api import payment_views
 
 
 
@@ -41,4 +42,5 @@ urlpatterns = [
 
 	path('payments/', ListPaymentView.as_view()),
 	path('payments/<int:pk>', SinglePaymentView.as_view()),
+	path('payments_for_order/<int:pk>', payment_views.get_list_payments_for_client_order)
 ]

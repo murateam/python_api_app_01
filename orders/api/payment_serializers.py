@@ -8,7 +8,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 			'id',
 			'created',
 			'client_order',
-			'payment_data',
+			'payment_date',
 			'payment_value',
 			'comment',
 		]

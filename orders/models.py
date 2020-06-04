@@ -101,7 +101,7 @@ class Payment(models.Model):
 	'''Платежы, привязаны к заказу определенного клиента'''
 	created = models.DateTimeField(auto_now_add=True)
 	client_order = models.ForeignKey(ClientOrder, on_delete=models.CASCADE, related_name='payments')
-	payment_data = models.DateTimeField(default=timezone.now)
+	payment_date = models.DateTimeField(default=timezone.now)
 	payment_value = models.FloatField(max_length=10)
 	comment = models.TextField(max_length=128, blank=True)
 

@@ -71,7 +71,6 @@ def save_stock_items_from_client_order(request):
 		"""
 			The function is checking is item correct -> save as correct OR save as incorrect
 		"""
-
 		def item_is_correct(item):
 			if item['factory_item']:
 				catalogue_number = item['factory_item']['catalogue_number']
@@ -87,11 +86,6 @@ def save_stock_items_from_client_order(request):
 
 					if catalogue_number == found_catalogue_number and factory_collection == found_factory_collection and factory == found_factory:
 						return found_factory_item
-
-				# 	else:
-				# 		return 'incorrect'
-				# else:
-				# 	return 'incorrect'
 			return 'incorrect'
 
 		def save_exist_correct_item(item, correct_item):

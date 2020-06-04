@@ -23,6 +23,7 @@ urlpatterns = [
 	path('clients/', ListClientView.as_view()),
 	path('clients/<int:pk>', SingleClientView.as_view()),
 	path('clients/check/', api_views.check_client),
+	path('clients/new', api_views.save_new_client), # save new client with convert birthDate to datetime
 
 	path('client_orders/', ListClientOrderView.as_view()),
 	path('client_orders/for_list/<int:pk>', SingleListClientOrderView.as_view()),
@@ -42,5 +43,6 @@ urlpatterns = [
 
 	path('payments/', ListPaymentView.as_view()),
 	path('payments/<int:pk>', SinglePaymentView.as_view()),
-	path('payments_for_order/<int:pk>', payment_views.get_list_payments_for_client_order)
+	path('payments_for_order/<int:pk>', payment_views.get_list_payments_for_client_order),
+	path('payments/new/', payment_views.save_new_payment),
 ]

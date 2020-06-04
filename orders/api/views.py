@@ -6,12 +6,31 @@ from orders.api.serializers import CurrentRateSerializer
 from orders.api.serializers import ClientSerializer, ListClientSerializer
 from orders.api.serializers import ClientOrderSerializer, ListClientOrderSerializer
 
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.decorators import api_view
+from django.utils.dateparse import parse_date
 
 from rest_framework.generics import get_object_or_404
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
+
+
+@api_view(['POST'])
+def save_new_client(request):
+	data = JSONParser().parse(request)
+	convert_to_date = parse_date(data['birth_date'])
+	data['birth_date'] = convert_to_date
+	serializer = ClientSerializer(data=data)
+	if serializer.is_valid():
+		serializer.save()
+		return Response(serializer.data)
+	else:
+		return Response(serializer.errors)
+
+	
 
 class ListClientView(ListCreateAPIView):
 	queryset = Client.objects.all()
@@ -51,7 +70,6 @@ def current_rate(request):
 	"""
 	if request.method == 'GET':
 		current_rate = CurrentRate.objects.all().last()
-		print(current_rate)
 		serializer = CurrentRateSerializer(current_rate)
 		return Response(serializer.data)
 

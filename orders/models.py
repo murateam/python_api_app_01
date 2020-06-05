@@ -200,7 +200,7 @@ class StockItem(models.Model):
 	is_correct = models.BooleanField('Корректный', default=False)
 	is_ordered = models.BooleanField('Заказан', default=False)
 	is_shipped = models.BooleanField('Отгружен', default=False)
-	stock_choices = models.CharField(max_length=30, choices=STOCK_CHOICES, default='waiting for processing')
+	stock_choices = models.CharField(max_length=30, choices=STOCK_CHOICES, default='cancel')
 	items_amount = models.IntegerField(default=0)
 	#prices
 	last_price_ru = models.FloatField(default=0)

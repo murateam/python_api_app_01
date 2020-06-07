@@ -6,16 +6,21 @@ from orders.api.serializers import CurrentRateSerializer
 from orders.api.serializers import ClientSerializer, ListClientSerializer
 from orders.api.serializers import ClientOrderSerializer, ListClientOrderSerializer
 
-from rest_framework.parsers import JSONParser
-from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
-from rest_framework.decorators import api_view
 from django.utils.dateparse import parse_date
 
 from rest_framework.generics import get_object_or_404
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
+
+import datetime
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.parsers import JSONParser
+from django.http import JsonResponse
+from rest_framework.response import Response
+from django.utils import timezone
+from datetime import datetime
 
 
 @api_view(['POST'])
@@ -40,6 +45,27 @@ class SingleClientView(generics.RetrieveUpdateAPIView):
 	queryset = Client.objects.all()
 	serializer_class = ClientSerializer
 
+@api_view(['POST'])
+def client_order_to_import(request):
+	"""
+		send to import client_order and its items
+	"""
+	data = JSONParser().parse(request)
+	client_order_id = data[0]['value']
+	action = data[1]['value']
+	client_order = ClientOrder.objects.get(pk=client_order_id)
+
+	client_order.state = 'published'
+	client_order.when_published = datetime.now(tz=timezone.utc)
+	client_order.save()
+	serializer = ClientOrderSerializer(client_order)
+
+	for item in client_order.stock_items.all():
+		item.stock_choices = 'waiting for processing'
+		item.save()
+
+	# return Response(status=status.HTTP_200_OK)
+	return JsonResponse(serializer.data)
 
 class ListClientOrderView(ListCreateAPIView):
 	queryset = ClientOrder.objects.all()
@@ -55,13 +81,6 @@ class SingleClientOrderView(RetrieveUpdateDestroyAPIView):
 
 
 ''' Пробую получить клиента по фамилии со своим блэкджеком и пр'''
-
-import datetime
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.parsers import JSONParser
-from django.http import JsonResponse
-from rest_framework.response import Response
 
 @api_view(['GET'])
 def current_rate(request):

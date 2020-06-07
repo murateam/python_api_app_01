@@ -19,18 +19,28 @@ class SinglePaymentView(RetrieveUpdateDestroyAPIView):
 	serializer_class = PaymentSerializer
 
 @api_view(['POST'])
-def save_new_payment(request):
+def save_payment(request):
 	data = JSONParser().parse(request)
 	convert_to_date = datetime.strptime(data['payment_date'], "%Y-%m-%d").date()
 
 	dt = datetime.combine(convert_to_date, datetime.min.time())
 	data['payment_date'] = dt
 
-	serializer = PaymentSerializer(data=data)
-	if serializer.is_valid():
-		serializer.save()
-
-	return Response(serializer.data)
+	if data['id'] != None:
+		exist_payment = Payment.objects.get(pk=data['id'])
+		serializer = PaymentSerializer(exist_payment, data=data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		else:
+			return Response(serializer.errors)
+	else:
+		serializer = PaymentSerializer(data=data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		else:
+			return Response(serializer.errors)
 	# return Response(status=status.HTTP_200_OK)
 
 

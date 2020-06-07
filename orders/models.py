@@ -72,7 +72,7 @@ class ClientOrder(models.Model):
 	payment_status = models.CharField(max_length=25, choices=STATUS_PAYMENT, default='waiting for payment')
 	author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
 	client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='orders')
-	when_published = models.DateTimeField(default=timezone.now, blank=True)
+	when_published = models.DateTimeField(auto_now=False, auto_now_add=False)
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 	# eur_rate = models.FloatField(max_length=10, default=0)
@@ -147,12 +147,12 @@ class ImportOrder(models.Model):
 		('done','Выполнен'),
 		('claim', 'Рекламация'),
 	)
-	import_number = models.CharField(max_length=10, unique=True)
+	import_number = models.CharField(max_length=20, unique=True)
 	status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='processing')
 	import_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='import_orders')
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
-	client_order = models.ForeignKey(ClientOrder, on_delete=models.CASCADE, related_name='import_orders')
+	# client_order = models.ForeignKey(ClientOrder, on_delete=models.CASCADE, related_name='import_orders')
 	#KW from AB неделя отгрузки
 	KW = models.CharField(max_length=16, blank=True)
 	delivery_to_client = models.DateField(auto_now_add=True)
@@ -210,6 +210,9 @@ class StockItem(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	comment = models.CharField(max_length=250, blank=True)
 	record_history = models.TextField(blank=True)
+	bank_euro_rate = models.FloatField(default=0)
+	factory_price_eur = models.FloatField(default=0)
+	factor = models.FloatField(default=0)
 
 	def __str__(self):
 		return str(self.client_order) + ' ' + str(self.factory_item)

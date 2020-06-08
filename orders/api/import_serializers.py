@@ -10,7 +10,6 @@ class ImportOrderSerializer(serializers.ModelSerializer):
 			'created',
 			'updated',
 			'KW',
-			'delivery_to_client',
 			'AB_num',
 			'AB_file',
 			'VAITEK_order',
@@ -18,8 +17,8 @@ class ImportOrderSerializer(serializers.ModelSerializer):
 			'bill',
 			'TTN',
 			'TRID',
-			'count_place',
+			'amount_place',
 			'volume',
-			'wight',
+			'weight',
 			'container_num',
 		]

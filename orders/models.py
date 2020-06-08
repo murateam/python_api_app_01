@@ -155,7 +155,7 @@ class ImportOrder(models.Model):
 	# client_order = models.ForeignKey(ClientOrder, on_delete=models.CASCADE, related_name='import_orders')
 	#KW from AB неделя отгрузки
 	KW = models.CharField(max_length=16, blank=True)
-	delivery_to_client = models.DateField(auto_now_add=True)
+	# delivery_to_client = models.DateField(auto_now_add=True)
 	AB_num = models.CharField(max_length=32, blank=True)
 	AB_file = models.ImageField(blank=True)
 	VAITEK_order = models.CharField(max_length=128, blank=True)
@@ -163,9 +163,9 @@ class ImportOrder(models.Model):
 	bill = models.ImageField(blank=True)
 	TTN = models.ImageField(blank=True)
 	TRID = models.CharField(max_length=128, blank=True)
-	count_place = models.IntegerField(default=0)
+	amount_place = models.IntegerField(default=0)
 	volume = models.FloatField(default=0)
-	wight = models.FloatField(default=0)
+	weight = models.FloatField(default=0)
 	container_num = models.CharField(max_length=10, blank=True)
 
 	def __str__(self):

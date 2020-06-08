@@ -10,8 +10,7 @@ from orders.api.payment_views import ListPaymentView, SinglePaymentView
 from orders.api import views as api_views
 from orders.api import item_views
 from orders.api import payment_views
-
-
+from orders.api.import_views import *
 
 app_name = "orders"
 
@@ -46,4 +45,7 @@ urlpatterns = [
 	path('payments/<int:pk>', SinglePaymentView.as_view()),
 	path('payments_for_order/<int:pk>', payment_views.get_list_payments_for_client_order),
 	path('payments/save/', payment_views.save_payment),
+
+	path('import_orders/', ListImportOrdersView.as_view()),
+	path('import_orders/<int:pk>', SingleImportOrderView.as_view()),
 ]

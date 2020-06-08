@@ -169,7 +169,7 @@ class ImportOrder(models.Model):
 	container_num = models.CharField(max_length=10, blank=True)
 
 	def __str__(self):
-		return str(self.import_user)+'  '+str(self.client_order.public_num) 
+		return str(self.import_number)
 
 class FactoryItem(models.Model):
 	'''Каталожный номер фабрик с немецким и русским описание. Добовляется к заказу через StockItem'''

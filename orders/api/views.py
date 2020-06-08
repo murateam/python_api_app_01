@@ -51,21 +51,25 @@ def client_order_to_import(request):
 		send to import client_order and its items
 	"""
 	data = JSONParser().parse(request)
-	client_order_id = data[0]['value']
-	action = data[1]['value']
-	client_order = ClientOrder.objects.get(pk=client_order_id)
+	data['client'] = data['client']['id']
+	data['author'] = data['author']['id']
 
-	client_order.state = 'published'
-	client_order.when_published = datetime.now(tz=timezone.utc)
-	client_order.save()
-	serializer = ClientOrderSerializer(client_order)
+	data['state'] = 'published'
+	data['when_published'] = datetime.now(tz=timezone.utc)
+	exist_client_order = ClientOrder.objects.get(pk=data['id'])
+	
+	serializer = ClientOrderSerializer(exist_client_order, data=data)
+	if serializer.is_valid():
+		serializer.save()
 
-	for item in client_order.stock_items.all():
-		item.stock_choices = 'waiting for processing'
-		item.save()
+		for item in exist_client_order.stock_items.all():
+			item.stock_choices = 'waiting for processing'
+			item.save()
+		return Response(serializer.data)
+	else: 
+		return Response(serializer.errors)
 
 	# return Response(status=status.HTTP_200_OK)
-	return JsonResponse(serializer.data)
 
 class ListClientOrderView(ListCreateAPIView):
 	queryset = ClientOrder.objects.all()
@@ -153,7 +157,6 @@ def client_order_add(request):
 	data = JSONParser().parse(request)
 	data['public_num'] = get_public_number()
 	serializer = ClientOrderSerializer(data=data)
-	serializer.is_valid()
 	if serializer.is_valid():
 		serializer.save()
 		return JsonResponse(serializer.data, status=201)

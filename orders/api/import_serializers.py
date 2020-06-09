@@ -21,4 +21,5 @@ class ImportOrderSerializer(serializers.ModelSerializer):
 			'volume',
 			'weight',
 			'container_num',
+			'comment',
 		]

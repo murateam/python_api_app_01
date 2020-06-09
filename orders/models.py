@@ -167,6 +167,7 @@ class ImportOrder(models.Model):
 	volume = models.FloatField(default=0)
 	weight = models.FloatField(default=0)
 	container_num = models.CharField(max_length=10, blank=True)
+	comment = models.TextField(blank=True)
 
 	def __str__(self):
 		return str(self.import_number)

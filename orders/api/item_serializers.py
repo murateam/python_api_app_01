@@ -77,7 +77,9 @@ class ListStockItemSerializer(serializers.ModelSerializer):
 			'current_price_ru'
 		]
 
-class StockItemExpSerializer(serializers.ModelSerializer):
+class ListStockItemExpSerializer(serializers.ModelSerializer):
+	factory_item = ListFactoryItemSerializer(many=False, read_only=True)
+	client_order = ListClientOrderSerializer(many=False, read_only=True)
 	class Meta:
 		model = StockItem
 		fields = [
@@ -99,6 +101,6 @@ class StockItemExpSerializer(serializers.ModelSerializer):
 			'comment',
 			'record_history',
 			'bank_euro_rate',
-			'factoroy_price_eur',
+			'factory_price_eur',
 			'factor',
 		]

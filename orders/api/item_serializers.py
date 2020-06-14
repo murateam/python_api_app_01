@@ -8,12 +8,22 @@ from orders.api.serializers import ListClientOrderSerializer
 class FactorySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Factory
-		fields =['id', 'name']
+		fields = ['id', 'name']
+
+class ListNameFactorySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Factory
+		fields = ['name']
 
 class FactoryCollectionSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = FactoryCollection
 		fields = ['id', 'name', 'factory', 'is_made']
+
+class ListNameFactoryCollectionSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = FactoryCollection
+		fields = ['name']
 
 class ListFactoryCollectionSerializer(serializers.ModelSerializer):
 	factory = FactorySerializer(many=False, read_only=True)
@@ -38,6 +48,11 @@ class ListFactoryItemSerializer(serializers.ModelSerializer):
 		model = FactoryItem
 		fields = ['id', 'factory_collection', 'catalogue_number']
 
+class ListNumberFactoryItemSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = FactoryItem
+		fields = ['catalogue_number']
+
 class StockItemSerializer(serializers.ModelSerializer):
 
 	class Meta:
@@ -51,7 +66,7 @@ class StockItemSerializer(serializers.ModelSerializer):
 			'stock_choices',
 			'items_amount',
 			'last_price_ru',
-			'current_price_ru',
+			'current_price_eur',
 			'last_price_eur',
 			'current_price_eur',
 			'created',
@@ -74,7 +89,7 @@ class ListStockItemSerializer(serializers.ModelSerializer):
 			'stock_choices',
 			'items_amount',
 			'stock_choices',
-			'current_price_ru'
+			'current_price_eur'
 		]
 
 class ListStockItemExpSerializer(serializers.ModelSerializer):

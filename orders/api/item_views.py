@@ -14,31 +14,72 @@ from orders.models import StockItem
 from orders.api.item_serializers import FactorySerializer, FactoryCollectionSerializer
 from orders.api.item_serializers import ListFactoryItemSerializer, FactoryItemSerializer
 from orders.api.item_serializers import StockItemSerializer, ListStockItemSerializer
+from orders.api.item_serializers import ListNameFactorySerializer, ListNameFactoryCollectionSerializer, ListNumberFactoryItemSerializer
 
 
 class FactoryView(ListCreateAPIView):
 	queryset = Factory.objects.all()
 	serializer_class = FactorySerializer
 
+class ListNameFactoryView(ListCreateAPIView):
+	queryset = Factory.objects.all()
+	serializer_class = ListNameFactorySerializer
+
 class SingleFactoryView(RetrieveUpdateDestroyAPIView):
 	queryset = Factory.objects.all()
 	serializer_class = FactorySerializer
+
 
 class FactoryCollectionView(ListCreateAPIView):
 	queryset = FactoryCollection.objects.all()
 	serializer_class = FactoryCollectionSerializer
 
+class ListNameFactoryCollectionView(ListCreateAPIView):
+	queryset = FactoryCollection.objects.all()
+	serializer_class = ListNameFactoryCollectionSerializer
+
+@api_view(['POST'])
+def list_name_factory_collections(request):
+	"""
+		GET factory collection by factory name
+	"""
+	data = JSONParser().parse(request)
+	factory = Factory.objects.filter(name=data[0]['value']).first()
+	factory_collections = factory.collections.all()
+	serializer = ListNameFactoryCollectionSerializer(factory_collections, many=True)
+	return Response(serializer.data)
+	# return Response(status=status.HTTP_200_OK)
+
+
 class SingleFactoryCollectionView(RetrieveUpdateDestroyAPIView):
 	queryset = FactoryCollection.objects.all()
 	serializer_class = FactoryCollectionSerializer
+
 
 class ListFactoryItemView(ListCreateAPIView):
 	queryset = FactoryItem.objects.all()
 	serializer_class = ListFactoryItemSerializer
 
+class ListNumberFactoryItemView(ListCreateAPIView):
+	queryset = FactoryCollection.objects.all()
+	serializer_class = ListNumberFactoryItemSerializer
+
+@api_view(['POST'])
+def list_catalogue_numbers(request):
+	"""
+		GET catalogue numbers by factory collection
+	"""
+	data = JSONParser().parse(request)
+	factory_collections = FactoryCollection.objects.filter(name=data[0]['value']).first()
+	factory_items = factory_collections.factory_items.all()
+	serializer = ListNumberFactoryItemSerializer(factory_items, many=True)
+	return Response(serializer.data)
+
+
 class SingleFactoryItemView(RetrieveUpdateDestroyAPIView):
 	queryset = FactoryItem.objects.all()
 	serializer_class = FactoryItemSerializer
+	
 
 class ListStockItemView(ListCreateAPIView):
 	queryset = StockItem.objects.all()

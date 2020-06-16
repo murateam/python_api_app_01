@@ -6,6 +6,8 @@ class ImportOrderSerializer(serializers.ModelSerializer):
 		model = ImportOrder
 		fields = [
 			'id',
+			'status',
+			'import_user',
 			'import_number',
 			'created',
 			'updated',

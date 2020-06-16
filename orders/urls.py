@@ -59,4 +59,5 @@ urlpatterns = [
 
 	path('import_orders/', ListImportOrdersView.as_view()),
 	path('import_orders/<int:pk>', SingleImportOrderView.as_view()),
+	path('import_orders/save_new/', save_new_import_order),
 ]

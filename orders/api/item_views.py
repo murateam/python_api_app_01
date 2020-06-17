@@ -98,83 +98,88 @@ def get_stock_items_for_client_order(request):
 	serializer = ListStockItemSerializer(stock_items, many=True)
 	return Response(serializer.data)
 
-@api_view(['POST'])
-def save_stock_items_from_client_order(request):
+
+def save_item(item, client_order_id):
 	"""
-		save existed and new stock items coming from client order
+		The function is checking and save items
+
+		  If item have field 'incorrect_factory',
+		this item is saved and haven't changes so it doesn't need to save again
+		  It saves item in four scenarios:
+		  1) as exist and correct
+		  2) as exist and incorrect
+		  3) as new and correct
+		  4) as new and incorrect
 	"""
-	data = JSONParser().parse(request)
-	client_order_id = data[0]['value']
-	list_items_to_save = data[1]['value']
-	list_items_to_delete = data[2]['value']
 
-	def save_item(item):
-		"""
-			The function is checking is item correct -> save as correct OR save as incorrect
-		"""
-		def item_is_correct(item):
-			if item['factory_item']:
-				catalogue_number = item['factory_item']['catalogue_number']
-				factory_collection = item['factory_item']['factory_collection']['name']
-				factory = item['factory_item']['factory_collection']['factory']['name']
+	def item_is_correct(item):
+		if item['factory_item']:
+			catalogue_number = item['factory_item']['catalogue_number']
+			factory_collection = item['factory_item']['factory_collection']['name']
+			factory = item['factory_item']['factory_collection']['factory']['name']
 
-				found_factory_item = FactoryItem.objects.filter(catalogue_number=item['factory_item']['catalogue_number']).first()
+			found_factory_item = FactoryItem.objects.filter(catalogue_number=item['factory_item']['catalogue_number']).first()
 
-				if found_factory_item:
-					found_catalogue_number = found_factory_item.catalogue_number
-					found_factory_collection = found_factory_item.factory_collection.name
-					found_factory = found_factory_item.factory_collection.factory.name
+			if found_factory_item:
+				found_catalogue_number = found_factory_item.catalogue_number
+				found_factory_collection = found_factory_item.factory_collection.name
+				found_factory = found_factory_item.factory_collection.factory.name
 
-					if catalogue_number == found_catalogue_number and factory_collection == found_factory_collection and factory == found_factory:
-						return found_factory_item
-			return 'incorrect'
+				if catalogue_number == found_catalogue_number and factory_collection == found_factory_collection and factory == found_factory:
+					return found_factory_item
+		return 'incorrect'
 
-		def save_exist_correct_item(item, correct_item):
-			exist_item = StockItem.objects.get(pk=item['id'])
-			client_order = item['client_order']['id']
-			factory_item = correct_item.id
-			item['client_order'] = client_order
-			item['factory_item'] = factory_item
-			item['is_correct'] = True
-			serializer = StockItemSerializer(exist_item, data=item)
-			if serializer.is_valid():
-				serializer.save()
-			else:
-				print(serializer.errors)
+	def save_exist_correct_item(item, correct_item):
+		exist_item = StockItem.objects.get(pk=item['id'])
+		client_order = item['client_order']['id']
+		factory_item = correct_item.id
+		item['client_order'] = client_order
+		item['factory_item'] = factory_item
+		item['is_correct'] = True
+		serializer = StockItemSerializer(exist_item, data=item)
+		if serializer.is_valid():
+			serializer.save()
+		else:
+			print(serializer.errors)
 
-		def save_exist_incorrect_item(item):
-			exist_item = StockItem.objects.get(pk=item['id'])
-			client_order = item['client_order']['id']
-			item['client_order'] = client_order
-			item['incorrect_factory'] = f"{item['factory_item']['factory_collection']['factory']['name']}&{item['factory_item']['factory_collection']['name']}&{item['factory_item']['catalogue_number']}"
-			item['factory_item'] = None
-			item['is_correct'] = False
-			serializer = StockItemSerializer(exist_item, data=item)
-			if serializer.is_valid():
-				serializer.save()
-			else:
-				print(serializer.errors)	
+	def save_exist_incorrect_item(item):
+		exist_item = StockItem.objects.get(pk=item['id'])
+		client_order = item['client_order']['id']
+		item['client_order'] = client_order
+		item['incorrect_factory'] = f"{item['factory_item']['factory_collection']['factory']['name']}&{item['factory_item']['factory_collection']['name']}&{item['factory_item']['catalogue_number']}"
+		item['factory_item'] = None
+		item['is_correct'] = False
+		serializer = StockItemSerializer(exist_item, data=item)
+		if serializer.is_valid():
+			serializer.save()
+		else:
+			print(serializer.errors)	
 
-		def save_new_correct_item(item):
-			item['client_order'] = client_order_id	
-			item['is_correct'] = True
-			serializer = StockItemSerializer(data=item)
-			if serializer.is_valid():
-				serializer.save()		
+	def save_new_correct_item(item):
+		item['client_order'] = client_order_id	
+		item['is_correct'] = True
+		serializer = StockItemSerializer(data=item)
+		if serializer.is_valid():
+			serializer.save()
+		else:
+			print(serializer.errors)
 
-		def save_new_incorrect_item(item):
-			item['client_order'] = client_order_id
-			item['incorrect_factory'] = f"{item['factory_item']['factory_collection']['factory']['name']}&{item['factory_item']['factory_collection']['name']}&{item['factory_item']['catalogue_number']}"
-			item['factory_item'] = None
-			item['is_correct'] = False
-			serializer = StockItemSerializer(data=item)
-			if serializer.is_valid():
-				serializer.save()
 
-		# print(item)
+	def save_new_incorrect_item(item):
+		item['client_order'] = client_order_id
+		item['incorrect_factory'] = f"{item['factory_item']['factory_collection']['factory']['name']}&{item['factory_item']['factory_collection']['name']}&{item['factory_item']['catalogue_number']}"
+		item['factory_item'] = None
+		item['is_correct'] = False
+		serializer = StockItemSerializer(data=item)
+		if serializer.is_valid():
+			serializer.save()
+		else:
+			print(serializer.errors)
+
+	if len(item['incorrect_factory']) == 0:
+
 		if item['id']:
 			correct_item = item_is_correct(item)
-			# print(correct_item.id)
 			if correct_item != 'incorrect':
 				print('exist correct')
 				save_exist_correct_item(item, correct_item)
@@ -188,23 +193,27 @@ def save_stock_items_from_client_order(request):
 			else:
 				print('don\'t exist incorrect')
 				save_new_incorrect_item(item)
-			
+		
 
 
-	def delete_exist_item(item):
-		if item['id']:
-			obj = StockItem.objects.filter(id=item['id']).delete()
-			print(obj)
+def delete_exist_item(item):
+	if item['id']:
+		obj = StockItem.objects.filter(id=item['id']).delete()
+		print(obj)
+
+@api_view(['POST'])
+def save_stock_items_from_client_order(request):
+	"""
+		save existed and new stock items coming from client order
+	"""
+	data = JSONParser().parse(request)
+	client_order_id = data[0]['value']
+	list_items_to_save = data[1]['value']
+	list_items_to_delete = data[2]['value']
 
 	
 	for item in list_items_to_save:
-		"""
-			if item have incorrect_factory,
-			this item saved and haven't changes and it don't need to save again
-		"""
-		# print(len(item['incorrect_factory']))
-		if len(item['incorrect_factory']) == 0:
-			save_item(item)
+			save_item(item, client_order_id)
 
 	for item in list_items_to_delete:
 		delete_exist_item(item)

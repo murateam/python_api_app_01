@@ -37,12 +37,10 @@ urlpatterns = [
 
 	path('factories/collections/', FactoryCollectionView.as_view()),
 	path('factories/collections/<int:pk>', SingleFactoryCollectionView.as_view()),
-	# path('factories/collections/list_names/', ListNameFactoryCollectionView.as_view()),
 	path('factories/collections/list_names/', item_views.list_name_factory_collections),
 
 	path('factories/items/', ListFactoryItemView.as_view()),
 	path('factories/items/<int:pk>', SingleFactoryItemView.as_view()),
-	# path('factories/items/list_numbers/', ListNumberFactoryItemView.as_view()),
 	path('factories/items/list_numbers/', item_views.list_catalogue_numbers),
 
 	path('stock_items/', ListStockItemView.as_view()),

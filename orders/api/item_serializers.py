@@ -13,7 +13,7 @@ class FactorySerializer(serializers.ModelSerializer):
 class ListNameFactorySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Factory
-		fields = ['name']
+		fields = ['id', 'name']
 
 class FactoryCollectionSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -23,7 +23,7 @@ class FactoryCollectionSerializer(serializers.ModelSerializer):
 class ListNameFactoryCollectionSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = FactoryCollection
-		fields = ['name']
+		fields = ['id', 'name']
 
 class ListFactoryCollectionSerializer(serializers.ModelSerializer):
 	factory = FactorySerializer(many=False, read_only=True)
@@ -51,7 +51,7 @@ class ListFactoryItemSerializer(serializers.ModelSerializer):
 class ListNumberFactoryItemSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = FactoryItem
-		fields = ['catalogue_number']
+		fields = ['id', 'catalogue_number']
 
 class StockItemSerializer(serializers.ModelSerializer):
 

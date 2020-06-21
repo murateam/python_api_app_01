@@ -176,8 +176,8 @@ class FactoryItem(models.Model):
 	'''Каталожный номер фабрик с немецким и русским описание. Добовляется к заказу через StockItem'''
 	factory_collection = models.ForeignKey(FactoryCollection, on_delete=models.CASCADE, related_name='factory_items')
 	catalogue_number = models.CharField(max_length=24)
-	description_rus = models.CharField(max_length=256)
-	description_de = models.CharField(max_length=256)
+	description_rus = models.CharField(max_length=256, blank=True, null=True)
+	description_de = models.CharField(max_length=256, blank=True, null=True)
 
 	def __str__(self):
 		return str(self.catalogue_number) + ' ' + str(self.factory_collection.factory).upper() + ' ' + str(self.factory_collection)

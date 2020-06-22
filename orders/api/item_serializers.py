@@ -54,7 +54,6 @@ class ListNumberFactoryItemSerializer(serializers.ModelSerializer):
 		fields = ['id', 'catalogue_number']
 
 class StockItemSerializer(serializers.ModelSerializer):
-
 	class Meta:
 		model = StockItem
 		fields = [

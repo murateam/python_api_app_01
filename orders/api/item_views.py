@@ -58,7 +58,18 @@ class SingleFactoryCollectionView(RetrieveUpdateDestroyAPIView):
 
 class ListFactoryItemView(ListCreateAPIView):
 	queryset = FactoryItem.objects.all()
-	serializer_class = ListFactoryItemSerializer
+	serializer_class = FactoryItemSerializer
+
+
+class SaveFactoryItemView(ListCreateAPIView):
+	queryset= FactoryItem.objects.all()
+	serializer_class = FactoryItemSerializer
+
+
+class SingleFactoryItemView(RetrieveUpdateDestroyAPIView):
+	queryset = FactoryItem.objects.all()
+	serializer_class = FactoryItemSerializer
+
 
 class ListNumberFactoryItemView(ListCreateAPIView):
 	queryset = FactoryCollection.objects.all()
@@ -74,12 +85,6 @@ def list_catalogue_numbers(request):
 	factory_items = factory_collections.factory_items.all()
 	serializer = ListNumberFactoryItemSerializer(factory_items, many=True)
 	return Response(serializer.data)
-
-
-class SingleFactoryItemView(RetrieveUpdateDestroyAPIView):
-	queryset = FactoryItem.objects.all()
-	serializer_class = FactoryItemSerializer
-	
 
 class ListStockItemView(ListCreateAPIView):
 	queryset = StockItem.objects.all()

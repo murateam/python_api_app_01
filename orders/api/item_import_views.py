@@ -14,3 +14,15 @@ class ListStockItemExpView(ListCreateAPIView):
 class SingleStockItemExpView(RetrieveUpdateDestroyAPIView):
 	queryset = StockItem.objects.all()
 	serializer_class = ListStockItemExpSerializer
+
+@api_view(['GET'])
+def get_stock_items_by_import_order(request, pk):
+	"""
+		get StockItems by ImportOrder ID
+	"""
+	# data = JSONParser().parse(request)
+	import_order = ImportOrder.objects.get(id=pk)
+	stock_items = import_order.stock_items.all()
+
+	serializer = ListStockItemExpSerializer(stock_items, many=True)
+	return Response(serializer.data)

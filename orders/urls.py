@@ -9,7 +9,7 @@ from orders.api.item_views import ListFactoryItemView, SaveFactoryItemView, Sing
 from orders.api.item_views import ListStockItemView
 from orders.api.item_views import ListNameFactoryView, ListNameFactoryCollectionView, ListNumberFactoryItemView
 from orders.api.payment_views import ListPaymentView, SinglePaymentView
-from orders.api.item_import_views import ListStockItemExpView, SingleStockItemExpView
+from orders.api.item_import_views import ListStockItemExpView, SingleStockItemExpView, get_stock_items_by_import_order
 from orders.api import views as api_views
 from orders.api import item_views
 from orders.api import payment_views

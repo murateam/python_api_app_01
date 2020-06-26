@@ -1,6 +1,6 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from orders.models import StockItem, ImportOrder
-from orders.api.item_serializers import ListStockItemExpSerializer
+from orders.api.item_serializers import ListStockItemExpSerializer, SingleStockItemExpSerializer
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -13,7 +13,7 @@ class ListStockItemExpView(ListCreateAPIView):
 
 class SingleStockItemExpView(RetrieveUpdateDestroyAPIView):
 	queryset = StockItem.objects.all()
-	serializer_class = ListStockItemExpSerializer
+	serializer_class = SingleStockItemExpSerializer
 
 @api_view(['GET'])
 def get_stock_items_by_import_order(request, pk):

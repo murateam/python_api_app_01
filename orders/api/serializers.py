@@ -33,7 +33,6 @@ class ListClientSerializer(serializers.ModelSerializer):
 		fields = ["id","last_name", "first_name", "middle_name"]
 
 class ClientOrderSerializer(serializers.ModelSerializer):
-
 	class Meta:
 		model = ClientOrder
 		fields = [

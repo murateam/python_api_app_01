@@ -13,7 +13,13 @@ class ListStockItemExpView(ListCreateAPIView):
 
 class SingleStockItemExpView(RetrieveUpdateDestroyAPIView):
 	queryset = StockItem.objects.all()
-	serializer_class = SingleStockItemExpSerializer
+	serializer_class = ListStockItemExpSerializer
+
+	# def update(self, request, *args, **kwargs):
+	# 	instance = self.get_object()
+	# 	print(dir(instance))
+
+	# 	return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def get_stock_items_by_import_order(request, pk):

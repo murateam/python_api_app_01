@@ -10,6 +10,7 @@ from orders.api.item_views import ListStockItemView
 from orders.api.item_views import ListNameFactoryView, ListNameFactoryCollectionView, ListNumberFactoryItemView
 from orders.api.payment_views import ListPaymentView, SinglePaymentView
 from orders.api.item_import_views import ListStockItemExpView, SingleStockItemExpView, get_stock_items_by_import_order
+from orders.api.item_import_views import SingleStockItemExpSaveFactoryView # Need to FIX!!!
 from orders.api import views as api_views
 from orders.api import item_views
 from orders.api import payment_views
@@ -51,6 +52,7 @@ urlpatterns = [
 	path('stock_items/save_from_client_order/', item_views.save_stock_items_from_client_order),
 	path('stock_items/import/', ListStockItemExpView.as_view()),
 	path('stock_items/import/<int:pk>', SingleStockItemExpView.as_view()),
+	path('stock_items/import/save_factory/<int:pk>', SingleStockItemExpSaveFactoryView.as_view()),
 	path('stock_items/import_order/<int:pk>', get_stock_items_by_import_order),
 
 

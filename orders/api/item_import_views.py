@@ -16,10 +16,17 @@ class SingleStockItemExpView(RetrieveUpdateDestroyAPIView):
 	serializer_class = ListStockItemExpSerializer
 
 	# def update(self, request, *args, **kwargs):
-	# 	instance = self.get_object()
-	# 	print(dir(instance))
+	# # 	instance = self.get_object()
+	# # 	print(dir(instance))
 
 	# 	return Response(status=status.HTTP_200_OK)
+
+class SingleStockItemExpSaveFactoryView(RetrieveUpdateDestroyAPIView):
+	"""
+	Crutch for save new factory. Need to fix!!!
+	"""
+	queryset = StockItem.objects.all()
+	serializer_class = SingleStockItemExpSerializer
 
 @api_view(['GET'])
 def get_stock_items_by_import_order(request, pk):

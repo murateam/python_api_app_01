@@ -93,7 +93,7 @@ class ListStockItemSerializer(serializers.ModelSerializer):
 
 class ListStockItemExpSerializer(serializers.ModelSerializer):
 	# https://www.django-rest-framework.org/api-guide/serializers/
-	factory_item = ListFactoryItemSerializer(many=False)
+	factory_item = ListFactoryItemSerializer(many=False, read_only=True)
 	client_order = ListClientOrderSerializer(many=False, read_only=True)
 	class Meta:
 		model = StockItem
@@ -120,14 +120,17 @@ class ListStockItemExpSerializer(serializers.ModelSerializer):
 			'factor',
 		]
 
-	def update(self, instance, validated_data):
-		factory_item_data = validated_data.pop('factory_item')
-		print(factory_item_data)
-		factory_item = instance.factory_item
-		print(factory_item)
-		instance.id = validated_data.get('id', instance.id)
-		instance.save()
-		return instance
+	# def update(self, instance, validated_data):
+	# 	# print('INSTANCE:', dir(instance))
+	# 	print('VALIDATA:', validated_data.items())
+
+	# 	# factory_item_data = validated_data.pop('factory_item')
+	# 	# print(factory_item_data.items())
+	# 	# factory_item = instance.factory_item
+	# 	# print(factory_item)
+	# 	# instance.id = validated_data.get('id', instance.id)
+	# 	# instance.save()
+	# 	return instance
 
 class SingleStockItemExpSerializer(serializers.ModelSerializer):
 	class Meta:

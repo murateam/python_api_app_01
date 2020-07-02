@@ -46,7 +46,7 @@ class ListFactoryItemSerializer(serializers.ModelSerializer):
 	factory_collection = ListFactoryCollectionSerializer(many=False, read_only=True)
 	class Meta:
 		model = FactoryItem
-		fields = ['id', 'factory_collection', 'catalogue_number']
+		fields = ['id', 'factory_collection', 'catalogue_number', 'description_de']
 
 class ListNumberFactoryItemSerializer(serializers.ModelSerializer):
 	class Meta:

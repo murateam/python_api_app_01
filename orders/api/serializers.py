@@ -19,7 +19,6 @@ class ClientSerializer(serializers.ModelSerializer):
 			"id",
 			"last_name",
 			"first_name",
-			"middle_name",
 			"birth_date",
 			"phone",
 			"email",
@@ -30,7 +29,7 @@ class ClientSerializer(serializers.ModelSerializer):
 class ListClientSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Client
-		fields = ["id","last_name", "first_name", "middle_name"]
+		fields = ["id","last_name", "first_name"]
 
 class ClientOrderSerializer(serializers.ModelSerializer):
 	class Meta:

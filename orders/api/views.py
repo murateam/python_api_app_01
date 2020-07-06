@@ -111,7 +111,7 @@ def check_client(request):
 		GET a client if the client exist
 	"""
 	client = (request.data['name'].split(' '))
-	last_name = first_name = middle_name = ''
+	last_name = first_name = ''
 
 	if client[0] == '':
 		return Response(status=status.HTTP_400_BAD_REQUEST)

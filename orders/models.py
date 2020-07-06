@@ -14,7 +14,7 @@ class CurrentRate(models.Model):
 class Client(models.Model):
 	'''клиент'''
 	first_name = models.CharField(max_length=50)
-	middle_name = models.CharField(max_length=50)
+	# middle_name = models.CharField(max_length=50)
 	last_name = models.CharField(max_length=50)
 	birth_date = models.DateField()
 	phone = models.CharField(max_length=20)
@@ -24,7 +24,7 @@ class Client(models.Model):
 	address = models.CharField(max_length=128)
 
 	def __str__(self):
-		return str(self.last_name)+' '+str(self.first_name)[0]+'.'+' '+str(self.middle_name)[0]+'.'
+		return str(self.last_name)+' '+str(self.first_name)[0]+'.'
 
 
 class Factory(models.Model):

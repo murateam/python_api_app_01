@@ -116,17 +116,17 @@ def check_client(request):
 	if client[0] == '':
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 	elif len(client) == 1:
-		found_client = Client.objects.filter(last_name=client[0]).first()
+		found_client = Client.objects.filter(first_name=client[0].title()).first()
 		if found_client == None:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 		serializer = ClientSerializer(found_client)
 		return Response(serializer.data)
 	elif len(client) == 2:
-		found_client = Client.objects.filter(last_name=client[0]).filter(first_name=client[1]).first()
+		found_client = Client.objects.filter(first_name=client[0].title()).filter(last_name=client[1].title()).first()
 		serializer = ClientSerializer(found_client)
 		return Response(serializer.data)
 	elif len(client) == 3:
-		found_client = Client.objects.filter(last_name=client[0]).filter(first_name=client[1]).filter(middle_name=client[2]).first()
+		found_client = Client.objects.filter(first_name=client[0].title()).filter(middle_name=client[1].title()).filter(last_name=client[2].title()).first()
 		serializer = ClientSerializer(found_client)
 		return Response(serializer.data)
 	elif len(client) > 3:
@@ -142,7 +142,7 @@ def client_order_add(request):
 	"""
 
 	def get_public_number():
-		now = datetime.datetime.now()
+		now = datetime.now()
 
 		last_order = ClientOrder.objects.last()
 
@@ -157,11 +157,13 @@ def client_order_add(request):
 	data = JSONParser().parse(request)
 	data['public_num'] = get_public_number()
 	serializer = ClientOrderSerializer(data=data)
+	# serializer.is_valid()
+	# print(serializer.errors)
 	if serializer.is_valid():
 		serializer.save()
 		return JsonResponse(serializer.data, status=201)
-
-	return JsonResponse(serializer.errors, status=400)
+	else:
+		return JsonResponse(serializer.errors, status=400)
 	# print(data)
 
 	# return Response(status=status.HTTP_200_OK)

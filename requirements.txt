@@ -6,7 +6,7 @@ django-cors-headers==3.2.1
 
 django-phone-field==1.8.0
 
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 
 Pillow==7.1.1
 
